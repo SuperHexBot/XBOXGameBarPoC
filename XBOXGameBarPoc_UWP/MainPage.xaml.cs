@@ -31,32 +31,23 @@ namespace XBOXGameBarPoC_UWP
             {
                 using (MemoryMappedViewAccessor viewAccessor = memoryMappedFile.CreateViewAccessor())
                 {
-                    using (Mutex mutex = new Mutex(false, "XboxGameBarPoc_Mutex"))
+                    while (true)
                     {
-                        while (true)
+                        int count = 0;
+                        viewAccessor.Read<int>(0, out count);
+                        if (count != 0)
                         {
-                            try
+                            Box[] boxArray = new Box[count];
+                            viewAccessor.ReadArray<Box>(4, boxArray, 0, count);
+
+                            using (CanvasDrawingSession ds = canvasSwapChainPanel.SwapChain.CreateDrawingSession(Colors.Transparent))
                             {
-                                mutex.WaitOne();
-
-                                int count = 0;
-                                viewAccessor.Read<int>(0, out count);
-                                Box[] boxArray = new Box[count];
-                                viewAccessor.ReadArray<Box>(4, boxArray, 0, count);
-
-                                using (CanvasDrawingSession ds = canvasSwapChainPanel.SwapChain.CreateDrawingSession(Colors.Transparent))
+                                for (int i = 0; i < boxArray.Length; i++)
                                 {
-                                    for (int i = 0; i < boxArray.Length; i++)
-                                    {
-                                        ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, Colors.Red);
-                                    }
+                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, Colors.Red);
                                 }
-                                canvasSwapChainPanel.SwapChain.Present();
                             }
-                            finally
-                            {
-                                mutex.ReleaseMutex();
-                            }
+                            canvasSwapChainPanel.SwapChain.Present();
                         }
                     }
                 }
