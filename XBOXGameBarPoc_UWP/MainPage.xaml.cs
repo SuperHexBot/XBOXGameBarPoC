@@ -46,11 +46,11 @@ namespace XBOXGameBarPoC_UWP
                                 viewAccessor.ReadArray<Box>(4, boxArray, 0, count);
                                 for (int i = 0; i < boxArray.Length; i++)
                                 {
-                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, Colors.Red);
+                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, Colors.Red,5);
                                     System.Numerics.Vector2 BoxTop;
                                     BoxTop.X = boxArray[i].X + boxArray[i].Width / 2.0f;
                                     BoxTop.Y = boxArray[i].Y;
-                                    ds.DrawLine(CenterTop, BoxTop, Colors.Red);
+                                    ds.DrawLine(CenterTop, BoxTop, Colors.Red,5);
                                 }
                             }
                             canvasSwapChainPanel.SwapChain.Present();
