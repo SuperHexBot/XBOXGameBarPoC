@@ -31,6 +31,9 @@ namespace XBOXGameBarPoC_UWP
             {
                 using (MemoryMappedViewAccessor viewAccessor = memoryMappedFile.CreateViewAccessor())
                 {
+                    System.Numerics.Vector2 CenterTop;
+                    CenterTop.X = 1920 / 2.0f;
+                    CenterTop.Y = 0.0f;
                     while (true)
                     {
                         int count = 0;
@@ -45,10 +48,14 @@ namespace XBOXGameBarPoC_UWP
                                 for (int i = 0; i < boxArray.Length; i++)
                                 {
                                     ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, Colors.Red);
+                                    System.Numerics.Vector2 BoxTop;
+                                    BoxTop.X = boxArray[i].X + boxArray[i].Width/2.0f;
+                                    BoxTop.Y = boxArray[i].Y;
+                                    ds.DrawLine(CenterTop, BoxTop,Colors.Red);
                                 }
                             }
-                            canvasSwapChainPanel.SwapChain.Present();
                         }
+                        canvasSwapChainPanel.SwapChain.Present();
                     }
                 }
             }
