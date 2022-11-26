@@ -32,8 +32,11 @@ namespace XBOXGameBarPoC_UWP
                 using (MemoryMappedViewAccessor viewAccessor = memoryMappedFile.CreateViewAccessor())
                 {
                     System.Numerics.Vector2 CenterTop;
+                    System.Numerics.Vector2 CenterBottom;
                     CenterTop.X = 2560 / 2.0f;
                     CenterTop.Y = 0.0f;
+                    CenterBottom.X = 2560 / 2.0f;
+                    CenterBottom.Y = 1440.0f;
                     while (true)
                     {
                         using (CanvasDrawingSession ds = canvasSwapChainPanel.SwapChain.CreateDrawingSession(Colors.Transparent))
@@ -48,11 +51,22 @@ namespace XBOXGameBarPoC_UWP
                                 viewAccessor.ReadArray<Box>(4, boxArray, 0, count);
                                 for (int i = 0; i < boxArray.Length; i++)
                                 {
-                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, boxArray[i].BoxColor, 5);
+                                    Color boxcolor = Colors.White;
+                                    Color shieldcolor = Colors.White;
+                                    if (boxArray[i].BoxColor == 1){ boxcolor = Colors.Red;}
+                                    else if (boxArray[i].BoxColor == 2) { boxcolor = Colors.Yellow; }
+                                    else if (boxArray[i].BoxColor == 3) { boxcolor = Colors.Black; }
+                                    if (boxArray[i].ShieldColor == 1) { shieldcolor = Colors.Blue; }
+                                    else if (boxArray[i].ShieldColor == 2) { shieldcolor = Colors.Purple; }
+                                    else if (boxArray[i].ShieldColor == 3) { shieldcolor = Colors.Red; }
+
+                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y - boxArray[i].Height, boxArray[i].Width, boxArray[i].Height, boxcolor, 1);
+                                    ds.DrawLine(boxArray[i].X - 5, boxArray[i].Y, boxArray[i].X - 5, boxArray[i].Y - boxArray[i].HpHeight, Colors.Red, 5);
+                                    ds.DrawLine(boxArray[i].X + boxArray[i].Width / 2, boxArray[i].Y, boxArray[i].X + boxArray[i].Width / 2, boxArray[i].Y - boxArray[i].ShieldHeight, shieldcolor, 5);
                                     System.Numerics.Vector2 BoxTop;
                                     BoxTop.X = boxArray[i].X + boxArray[i].Width / 2.0f;
                                     BoxTop.Y = boxArray[i].Y;
-                                    ds.DrawLine(CenterTop, BoxTop, boxArray[i].LineColor, 5);
+                                    ds.DrawLine(CenterBottom, BoxTop, boxcolor, 1);
                                     spectators = boxArray[i].spectators;
                                     allied_spectators = boxArray[i].allied_spectators;
                                 }
@@ -72,9 +86,8 @@ namespace XBOXGameBarPoC_UWP
             public float Height;
             public float HpHeight;
             public float ShieldHeight;
-            public Color BoxColor;
-            public Color LineColor;
-            public Color ShieldColor;
+            public int BoxColor;
+            public int ShieldColor;
             public int spectators;
             public int allied_spectators;
         }
