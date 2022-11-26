@@ -61,7 +61,6 @@
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>63A6FEE489ACB70382AAAAF7EADCCD706D8680BA</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -112,6 +111,9 @@
   <ItemGroup>
     <ProjectReference Include="..\XBOXGameBarPoc_UWP\XBOXGameBarPoc_UWP.csproj" />
     <ProjectReference Include="..\XBOXGameBarPoc_Win32\XBOXGameBarPoc_Win32.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Win2D.uwp" Version="1.26.0" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

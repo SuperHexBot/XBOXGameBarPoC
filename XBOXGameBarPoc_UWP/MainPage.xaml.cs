@@ -32,13 +32,15 @@ namespace XBOXGameBarPoC_UWP
                 using (MemoryMappedViewAccessor viewAccessor = memoryMappedFile.CreateViewAccessor())
                 {
                     System.Numerics.Vector2 CenterTop;
-                    CenterTop.X = 1920 / 2.0f;
+                    CenterTop.X = 2560 / 2.0f;
                     CenterTop.Y = 0.0f;
                     while (true)
                     {
                         using (CanvasDrawingSession ds = canvasSwapChainPanel.SwapChain.CreateDrawingSession(Colors.Transparent))
                         {
                             int count = 0;
+                            int spectators = 0;
+                            int allied_spectators = 0;
                             viewAccessor.Read<int>(0, out count);
                             if (count != 0)
                             {
@@ -46,12 +48,15 @@ namespace XBOXGameBarPoC_UWP
                                 viewAccessor.ReadArray<Box>(4, boxArray, 0, count);
                                 for (int i = 0; i < boxArray.Length; i++)
                                 {
-                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, Colors.Red,5);
+                                    ds.DrawRectangle(boxArray[i].X, boxArray[i].Y, boxArray[i].Width, boxArray[i].Height, boxArray[i].BoxColor, 5);
                                     System.Numerics.Vector2 BoxTop;
                                     BoxTop.X = boxArray[i].X + boxArray[i].Width / 2.0f;
                                     BoxTop.Y = boxArray[i].Y;
-                                    ds.DrawLine(CenterTop, BoxTop, Colors.Red,5);
+                                    ds.DrawLine(CenterTop, BoxTop, boxArray[i].LineColor, 5);
+                                    spectators = boxArray[i].spectators;
+                                    allied_spectators = boxArray[i].allied_spectators;
                                 }
+                                ds.DrawText("s:" + spectators + "-" + allied_spectators, CenterTop, Colors.White);
                             }
                             canvasSwapChainPanel.SwapChain.Present();
                         }
@@ -65,6 +70,13 @@ namespace XBOXGameBarPoC_UWP
             public float Y;
             public float Width;
             public float Height;
+            public float HpHeight;
+            public float ShieldHeight;
+            public Color BoxColor;
+            public Color LineColor;
+            public Color ShieldColor;
+            public int spectators;
+            public int allied_spectators;
         }
     }
 }
