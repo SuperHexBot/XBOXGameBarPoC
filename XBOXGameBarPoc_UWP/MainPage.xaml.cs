@@ -45,10 +45,12 @@ namespace XBOXGameBarPoC_UWP
                             int spectators = 0;
                             int allied_spectators = 0;
                             viewAccessor.Read<int>(0, out count);
+                            viewAccessor.Read<int>(4, out spectators);
+                            viewAccessor.Read<int>(8, out allied_spectators);
                             if (count != 0)
                             {
                                 Box[] boxArray = new Box[count];
-                                viewAccessor.ReadArray<Box>(4, boxArray, 0, count);
+                                viewAccessor.ReadArray<Box>(12, boxArray, 0, count);
                                 for (int i = 0; i < boxArray.Length; i++)
                                 {
                                     Color boxcolor = Colors.White;
@@ -62,16 +64,14 @@ namespace XBOXGameBarPoC_UWP
 
                                     ds.DrawRectangle(boxArray[i].X, boxArray[i].Y - boxArray[i].Height, boxArray[i].Width, boxArray[i].Height, boxcolor, 1);
                                     ds.DrawLine(boxArray[i].X - 5, boxArray[i].Y, boxArray[i].X - 5, boxArray[i].Y - boxArray[i].HpHeight, Colors.Red, 5);
-                                    ds.DrawLine(boxArray[i].X + boxArray[i].Width / 2, boxArray[i].Y, boxArray[i].X + boxArray[i].Width / 2, boxArray[i].Y - boxArray[i].ShieldHeight, shieldcolor, 5);
+                                    ds.DrawLine(boxArray[i].X + boxArray[i].Width / 2 + 5, boxArray[i].Y, boxArray[i].X + boxArray[i].Width / 2 + 5, boxArray[i].Y - boxArray[i].ShieldHeight, shieldcolor, 5);
                                     System.Numerics.Vector2 BoxTop;
                                     BoxTop.X = boxArray[i].X + boxArray[i].Width / 2.0f;
                                     BoxTop.Y = boxArray[i].Y;
                                     ds.DrawLine(CenterBottom, BoxTop, boxcolor, 1);
-                                    spectators = boxArray[i].spectators;
-                                    allied_spectators = boxArray[i].allied_spectators;
                                 }
-                                ds.DrawText("s:" + spectators + "-" + allied_spectators, CenterTop, Colors.White);
                             }
+                            ds.DrawText("s:" + spectators + "-" + allied_spectators, CenterTop, Colors.White);
                             canvasSwapChainPanel.SwapChain.Present();
                         }
                     }
@@ -88,8 +88,6 @@ namespace XBOXGameBarPoC_UWP
             public float ShieldHeight;
             public int BoxColor;
             public int ShieldColor;
-            public int spectators;
-            public int allied_spectators;
         }
     }
 }
